@@ -1,36 +1,14 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
-import instance from "../axios";
-import ReactPaginate from "react-paginate";
 
-function ProductList() {
-  const [product, setProduct] = useState([]);
-  const [currentPage, setCurrentPage] = useState(0);
-  const [paginatedData, setPaginatedData] = useState([]);
-
-  const handlePageChange = ({ selected }) => {
-    setCurrentPage(selected);
-  };
-  useEffect(() => {
-    (async () => {
-      const { data } = await instance.get("/products");
-      const perPage = 5;
-      const offset = currentPage * perPage;
-      const paginatedData = data.slice(offset, offset + perPage);
-      setPaginatedData(paginatedData);
-      console.log(paginatedData);
-
-      setProduct(data);
-    })();
-  }, [currentPage]);
-
+function ProductList({ data }) {
   return (
     <div className="bg-white">
       <div className="mx-auto max-w-2xl px-4 py-16 sm:px-6 sm:py-24 lg:max-w-7xl lg:px-8">
         <h2 className="sr-only">Sản phẩm</h2>
 
         <div className="grid grid-cols-1 gap-y-10 sm:grid-cols-2 gap-x-6 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8">
-          {paginatedData.map((product) => (
+          {data.map((product) => (
             <div
               key={product.id}
               className="group border border-gray-200 rounded-lg overflow-hidden flex flex-col"
@@ -65,26 +43,6 @@ function ProductList() {
               </div>
             </div>
           ))}
-
-          <div>
-            {/* Render danh sách dữ liệu */}
-            {/* Thanh phân trang */}
-            <ReactPaginate
-              pageCount={5} // Tổng số trang
-              pageRangeDisplayed={2} // Số trang hiển thị trên thanh phân trang
-              marginPagesDisplayed={2} // Số trang hiển thị ở hai đầu của thanh phân trang
-              previousLabel={
-                <span style={{ color: "#007bff" }}>Trang trước</span>
-              } // Nhãn trang trước
-              nextLabel={<span style={{ color: "#007bff" }}>Trang sau</span>} // Nhãn trang sau
-              breakLabel={<span style={{ color: "#6c757d" }}>...</span>} // Nhãn trang ngắt dòng
-              onPageChange={handlePageChange} // Callback khi chuyển trang
-              containerClassName={"pagination"} // Lớp CSS cho container
-              // activeClassName={"active"} // Lớp CSS cho trang hiện tại
-              activeLinkClassName={"active-link"} // Lớp CSS cho liên kết trang hiện tại
-              pageLinkClassName={"page-link"} // Lớp CSS cho liên kết trang
-            />
-          </div>
         </div>
       </div>
     </div>
