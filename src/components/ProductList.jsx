@@ -1,14 +1,18 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Link } from "react-router-dom";
+import { ProductContext } from "../contexts/ProductContext";
+import instance from "../axios";
 
-function ProductList({ data }) {
+function ProductList() {
+  const { state } = useContext(ProductContext);
+
   return (
     <div className="bg-white">
       <div className="mx-auto max-w-2xl px-4 py-16 sm:px-6 sm:py-24 lg:max-w-7xl lg:px-8">
         <h2 className="sr-only">Sản phẩm</h2>
 
         <div className="grid grid-cols-1 gap-y-10 sm:grid-cols-2 gap-x-6 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8">
-          {data.map((product) => (
+          {state.products.map((product) => (
             <div
               key={product.id}
               className="group border border-gray-200 rounded-lg overflow-hidden flex flex-col"

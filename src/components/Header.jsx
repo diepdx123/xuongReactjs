@@ -1,7 +1,32 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
+import { ChevronDownIcon } from "@heroicons/react/20/solid";
+
+function classNames(...classes) {
+  return classes.filter(Boolean).join(" ");
+}
 
 function Header() {
+  const nav = useNavigate();
+  const [userInfo, setUserInfo] = useState({});
+
+  useEffect(() => {
+    try {
+      (async () => {
+        const data = await JSON.parse(localStorage.getItem("users"));
+        setUserInfo(data.user);
+      })();
+    } catch (error) {
+      console.log(error);
+    }
+  }, []);
+
+  const handleLogout = () => {
+    localStorage.removeItem("users");
+    nav("/");
+  };
+
   return (
     <div>
       <header className="flex shadow-md py-4 px-4 sm:px-10 bg-white font-[sans-serif] min-h-[70px] tracking-wide relative z-50">
@@ -80,27 +105,76 @@ function Header() {
               </li>
             </ul>
           </div>
-          <div className="flex max-lg:ml-auto space-x-3">
-            <button className="px-4 py-2 text-sm rounded-full font-bold text-white border-2 border-[#007bff] bg-[#007bff] transition-all ease-in-out duration-300 hover:bg-transparent hover:text-[#007bff]">
-              Login
-            </button>
-            <button className="px-4 py-2 text-sm rounded-full font-bold text-white border-2 border-[#007bff] bg-[#007bff] transition-all ease-in-out duration-300 hover:bg-transparent hover:text-[#007bff]">
-              Sign up
-            </button>
-            <button id="toggleOpen" className="lg:hidden">
-              <svg
-                className="w-7 h-7"
-                fill="#000"
-                viewBox="0 0 20 20"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  fillRule="evenodd"
-                  d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z"
-                  clipRule="evenodd"
-                />
-              </svg>
-            </button>
+          <div>
+            {userInfo.userName ? (
+              <div>
+                <Menu as="div" className="relative inline-block text-left">
+                  <div>
+                    <MenuButton className="inline-flex w-full justify-center gap-x-1.5 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
+                      {userInfo.userName}
+                      <ChevronDownIcon
+                        className="-mr-1 h-5 w-5 text-gray-400"
+                        aria-hidden="true"
+                      />
+                    </MenuButton>
+                  </div>
+
+                  <MenuItems
+                    transition
+                    className="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 transition focus:outline-none data-[closed]:scale-95 data-[closed]:transform data-[closed]:opacity-0 data-[enter]:duration-100 data-[leave]:duration-75 data-[enter]:ease-out data-[leave]:ease-in"
+                  >
+                    <div className="py-1">
+                      <MenuItem>
+                        <Link
+                          to="#"
+                          className="text-gray-700 block px-4 py-2 text-sm"
+                        >
+                          Thay doi mat khau
+                        </Link>
+                      </MenuItem>
+
+                      <MenuItem>
+                        <button
+                          onClick={handleLogout}
+                          type="submit"
+                          className="text-gray-700 block px-4 py-2 text-sm"
+                        >
+                          Dang Xuat
+                        </button>
+                      </MenuItem>
+                    </div>
+                  </MenuItems>
+                </Menu>
+              </div>
+            ) : (
+              <div className="flex max-lg:ml-auto space-x-3">
+                <Link
+                  to="/login"
+                  className="px-4 py-2 text-sm rounded-full font-bold text-white border-2 border-[#007bff] bg-[#007bff] transition-all ease-in-out duration-300 hover:bg-transparent hover:text-[#007bff]"
+                >
+                  Login
+                </Link>
+                <Link
+                  to="/register"
+                  className="px-4 py-2 text-sm rounded-full font-bold text-white border-2 border-[#007bff] bg-[#007bff] transition-all ease-in-out duration-300 hover:bg-transparent hover:text-[#007bff]"
+                >
+                  Register
+                </Link>
+                <button id="toggleOpen" className="lg:hidden">
+                  <svg
+                    className="w-7 h-7"
+                    viewBox="0 0 20 20"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                </button>
+              </div>
+            )}
           </div>
         </div>
       </header>
