@@ -3,7 +3,7 @@ import React, { useContext } from "react";
 import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../contexts/AuthContext";
-import { loginSchema, registerSchema } from "../schema/SchemaAuth";
+import { AuthSchema } from "../schema/SchemaAuth";
 
 function AuthFormPage({ isRegister }) {
   const nav = useNavigate();
@@ -13,13 +13,13 @@ function AuthFormPage({ isRegister }) {
     handleSubmit,
     formState: { errors },
   } = useForm({
-    resolver: zodResolver(isRegister ? registerSchema : loginSchema),
+    resolver: zodResolver(AuthSchema),
   });
 
   const onSubmit = async (data) => {
     try {
       if (isRegister) {
-        await registerUser(data.email, data.password, data.userName);
+        await registerUser(data.email, data.password);
         if (confirm("Successfully, redirect to login page?")) {
           nav("/login");
         }
@@ -44,25 +44,6 @@ function AuthFormPage({ isRegister }) {
           onSubmit={handleSubmit(onSubmit)}
           className="bg-gray-200 shadow-md rounded px-8 pt-6 pb-8 mb-4"
         >
-          {isRegister && (
-            <div className="mb-6">
-              <label
-                htmlFor="userName"
-                className="block text-gray-700 text-sm font-bold mb-2"
-              >
-                User Name
-              </label>
-              <input
-                type="text"
-                className="shadow appearance-none  rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
-                id="userName"
-                {...register("userName", { required: true })}
-              />
-              {errors.userName && (
-                <p className="text-danger">{errors.userName?.message}</p>
-              )}
-            </div>
-          )}
           <div className="mb-4">
             <label
               className="block text-gray-700 text-sm font-bold mb-2"

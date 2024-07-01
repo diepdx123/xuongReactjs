@@ -1,17 +1,24 @@
 {
   "users": [
     {
-      "email": "diepdxph32317@fpt.edu.vn",
-      "password": "$2a$10$IThC4LARjZS3YzZORwYtj.vybFPc1XDZfxzNLLFx/FVycuubMeWOi",
-      "userName": "bo diep",
+      "email": "diep1@gmail.com",
+      "password": "$2a$10$RdXQDSENMZmr6XNh6cycrO4Fofnc3N/lSDrCTMveGKOV5OxspV75K",
+      "userName": "bodiep",
       "role": "admin",
       "id": 1
+    },
+    {
+      "email": "diep2@gmail.com",
+      "password": "$2a$10$Hpx43.I6pX8x/uovrdBsbOLlh3Q3MvHWrgoRIf/06qRXQ3VbLSBre",
+      "userName": "bodiep",
+      "role": "admin",
+      "id": 2
     }
   ],
   "products": [
     {
       "id": 27,
-      "title": "Flying Wooden Bird",
+      "title": "sua nhe",
       "description": "Package Include 6 Birds with Adhesive Tape Shape: 3D Shaped Wooden Birds Material: Wooden MDF, Laminated 3.5mm",
       "price": 51,
       "discountPercentage": 15.58,

@@ -72,22 +72,6 @@ function Header() {
                   Shop
                 </Link>
               </li>
-              <li className="max-lg:border-b border-gray-300 max-lg:py-3 px-3">
-                <Link
-                  to="/about"
-                  className="hover:text-[#007bff] text-gray-500 block font-semibold text-[15px]"
-                >
-                  About
-                </Link>
-              </li>
-              <li className="max-lg:border-b border-gray-300 max-lg:py-3 px-3">
-                <Link
-                  to="javascript:void(0)"
-                  className="hover:text-[#007bff] text-gray-500 block font-semibold text-[15px]"
-                >
-                  Contact
-                </Link>
-              </li>
             </ul>
           </div>
           <div>
@@ -101,7 +85,7 @@ function Header() {
                     type="button"
                     onClick={() => setShowDropdown(!showDropdown)}
                   >
-                    {user.userName}
+                    {user.email}
                     <svg
                       className="w-2.5 h-2.5 ms-3"
                       aria-hidden="true"
@@ -131,13 +115,20 @@ function Header() {
                       <li>
                         <Link
                           onClick={handleLogout}
-                          href="#"
+                          to="#"
                           className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
                         >
                           Logout
                         </Link>
                       </li>
-                      {/* ... các mục dropdown khác ... */}
+                      <li>
+                        <Link
+                          to="/admin"
+                          className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                        >
+                          Admin?
+                        </Link>
+                      </li>
                     </ul>
                   </div>
                 </div>

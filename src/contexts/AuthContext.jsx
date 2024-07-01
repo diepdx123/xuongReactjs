@@ -1,5 +1,6 @@
-import { Children, createContext, useEffect, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 import instance from "../axios";
+import Cookies from "js-cookie";
 
 export const AuthContext = createContext();
 
@@ -10,6 +11,7 @@ const AuthContextProvider = ({ children }) => {
   useEffect(() => {
     const checkAuth = async () => {
       const token = localStorage.getItem("token");
+      // const token = Cookies.get("token");
       if (token) {
         try {
           const { data } = await instance.get("/me", {
@@ -17,6 +19,7 @@ const AuthContextProvider = ({ children }) => {
               Authorization: `Bearer ${token}`,
             },
           });
+          console.log(data);
           setUser(data);
           setIsAuth(true);
         } catch (error) {
@@ -33,35 +36,38 @@ const AuthContextProvider = ({ children }) => {
     try {
       const { data } = await instance.post("/login", { email, password });
       localStorage.setItem("token", data.accessToken);
+      // Cookies.set("token", data.accessToken, { expires: 3 });
       setUser(data.user);
       setIsAuth(true);
     } catch (error) {
       setIsAuth(false);
       setUser(null);
+
+      // nem ra loi duoi dang error obj de ben authForm co the bat duoc
       throw new Error(error?.response?.data || "Đăng nhập thất bại");
     }
   };
 
-  const register = async (email, password, userName) => {
+  const register = async (email, password) => {
     try {
       const { data } = await instance.post("/register", {
         email,
         password,
-        userName,
       });
       localStorage.setItem("token", data.accessToken);
+      // Cookies.set("token", data.accessToken, { expires: 3 });
       setUser(data.user);
       setIsAuth(true);
     } catch (error) {
       setIsAuth(false);
       setUser(null);
-      // nem ra loi duoi dang error obj de ben authForm co the bat duoc
       throw new Error(error?.response?.data || "Đăng ki thất bại");
     }
   };
 
   const logout = () => {
     localStorage.removeItem("token");
+    // Cookies.remove("token");
     setUser(null);
     setIsAuth(false);
   };
