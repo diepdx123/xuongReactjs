@@ -1,13 +1,13 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import React from "react";
-import { Link, useNavigate } from "react-router-dom";
-import instance from "../axios/index";
-import { loginSchema, registerSchema } from "../schema/SchemaAuth";
+import React, { useContext } from "react";
 import { useForm } from "react-hook-form";
+import { Link, useNavigate } from "react-router-dom";
+import { AuthContext } from "../contexts/AuthContext";
+import { loginSchema, registerSchema } from "../schema/SchemaAuth";
 
 function AuthFormPage({ isRegister }) {
   const nav = useNavigate();
-
+  const { login, register: registerUser } = useContext(AuthContext);
   const {
     register,
     handleSubmit,
@@ -16,21 +16,22 @@ function AuthFormPage({ isRegister }) {
     resolver: zodResolver(isRegister ? registerSchema : loginSchema),
   });
 
-  const onSubmit = (data) => {
-    (async () => {
-      try {
-        if (isRegister) {
-          await instance.post(`/register`, data);
+  const onSubmit = async (data) => {
+    try {
+      if (isRegister) {
+        await registerUser(data.email, data.password, data.userName);
+        if (confirm("Successfully, redirect to login page?")) {
           nav("/login");
-        } else {
-          const result = await instance.post(`/login`, data);
-          localStorage.setItem("users", JSON.stringify(result.data));
+        }
+      } else {
+        await login(data.email, data.password);
+        if (confirm("Successfully, redirect to admin page?")) {
           nav("/");
         }
-      } catch (error) {
-        alert(error?.response?.data);
       }
-    })();
+    } catch (error) {
+      alert(error.message);
+    }
   };
 
   return (
@@ -46,7 +47,7 @@ function AuthFormPage({ isRegister }) {
           {isRegister && (
             <div className="mb-6">
               <label
-                htmlFor="confirmPass"
+                htmlFor="userName"
                 className="block text-gray-700 text-sm font-bold mb-2"
               >
                 User Name
@@ -57,7 +58,7 @@ function AuthFormPage({ isRegister }) {
                 id="userName"
                 {...register("userName", { required: true })}
               />
-              {errors.userName?.message && (
+              {errors.userName && (
                 <p className="text-danger">{errors.userName?.message}</p>
               )}
             </div>
@@ -75,7 +76,7 @@ function AuthFormPage({ isRegister }) {
               type="email"
               {...register("email", { required: true })}
             />
-            {errors.email?.message && (
+            {errors.email && (
               <p className="text-danger">{errors.email?.message}</p>
             )}
           </div>
@@ -93,7 +94,7 @@ function AuthFormPage({ isRegister }) {
               placeholder="********"
               {...register("password", { required: true })}
             />
-            {errors.password?.message && (
+            {errors.password && (
               <p className="text-danger">{errors.password?.message}</p>
             )}
           </div>
@@ -109,11 +110,7 @@ function AuthFormPage({ isRegister }) {
                 type="password"
                 className="shadow appearance-none  rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
                 id="confirmPass"
-                {...register("confirmPass", { required: true })}
               />
-              {errors.confirmPass?.message && (
-                <p className="text-danger">{errors.confirmPass?.message}</p>
-              )}
             </div>
           )}
           <div className="flex items-center justify-between">

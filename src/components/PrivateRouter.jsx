@@ -1,11 +1,15 @@
-import React from "react";
-import { Navigate, Outlet } from "react-router-dom";
-import Dashboard from "./Dashboard";
-import LayoutAdmin from "../layouts/LayoutAdmin";
+import { useContext } from "react";
+import { AuthContext } from "../contexts/AuthContext";
+import { Outlet } from "react-router-dom";
+import AccessDeniedPage from "../pages/AccessDeniedPage";
 
 function PrivateRouter() {
-  const accessToken = JSON.parse(localStorage.getItem("users"))?.accessToken;
-  return accessToken ? <LayoutAdmin /> : <Navigate to="/login" />;
+  const { isAuth, user } = useContext(AuthContext);
+  console.log(isAuth, user);
+  if (user?.role !== "admin") {
+    return <AccessDeniedPage />;
+  }
+  return <Outlet />;
 }
 
 export default PrivateRouter;

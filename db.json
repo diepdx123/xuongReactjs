@@ -2,9 +2,9 @@
   "users": [
     {
       "email": "diepdxph32317@fpt.edu.vn",
-      "password": "$2a$10$wggM6PymrSOc99Se7nhnaeXlrFaHdLD5zsIKj/k5DZ8bS6hm3kFu.",
-      "userName": "diepdx",
-      "confirmPass": "12345678",
+      "password": "$2a$10$IThC4LARjZS3YzZORwYtj.vybFPc1XDZfxzNLLFx/FVycuubMeWOi",
+      "userName": "bo diep",
+      "role": "admin",
       "id": 1
     }
   ],

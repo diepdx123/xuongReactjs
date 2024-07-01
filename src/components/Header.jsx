@@ -1,29 +1,14 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
-import { ChevronDownIcon } from "@heroicons/react/20/solid";
-
-function classNames(...classes) {
-  return classes.filter(Boolean).join(" ");
-}
+import { AuthContext } from "../contexts/AuthContext";
 
 function Header() {
+  const { isAuth, user, logout } = useContext(AuthContext);
   const nav = useNavigate();
-  const [userInfo, setUserInfo] = useState({});
-
-  useEffect(() => {
-    try {
-      (async () => {
-        const data = await JSON.parse(localStorage.getItem("users"));
-        setUserInfo(data.user);
-      })();
-    } catch (error) {
-      console.log(error);
-    }
-  }, []);
+  const [showDropdown, setShowDropdown] = useState(false);
 
   const handleLogout = () => {
-    localStorage.removeItem("users");
+    logout();
     nav("/");
   };
 
@@ -106,46 +91,57 @@ function Header() {
             </ul>
           </div>
           <div>
-            {userInfo.userName ? (
-              <div>
-                <Menu as="div" className="relative inline-block text-left">
-                  <div>
-                    <MenuButton className="inline-flex w-full justify-center gap-x-1.5 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
-                      {userInfo.userName}
-                      <ChevronDownIcon
-                        className="-mr-1 h-5 w-5 text-gray-400"
-                        aria-hidden="true"
-                      />
-                    </MenuButton>
-                  </div>
-
-                  <MenuItems
-                    transition
-                    className="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 transition focus:outline-none data-[closed]:scale-95 data-[closed]:transform data-[closed]:opacity-0 data-[enter]:duration-100 data-[leave]:duration-75 data-[enter]:ease-out data-[leave]:ease-in"
+            {isAuth ? (
+              <>
+                <div className="relative">
+                  <button
+                    id="dropdownDefaultButton"
+                    data-dropdown-toggle="dropdown"
+                    className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                    type="button"
+                    onClick={() => setShowDropdown(!showDropdown)}
                   >
-                    <div className="py-1">
-                      <MenuItem>
+                    {user.userName}
+                    <svg
+                      className="w-2.5 h-2.5 ms-3"
+                      aria-hidden="true"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 10 6"
+                    >
+                      <path
+                        stroke="currentColor"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="m1 1 4 4 4-4"
+                      />
+                    </svg>
+                  </button>
+                  <div
+                    id="dropdown"
+                    className={`absolute z-10 bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 ${
+                      showDropdown ? "" : "hidden"
+                    }`}
+                  >
+                    <ul
+                      className="py-2 text-sm text-gray-700 dark:text-gray-200"
+                      aria-labelledby="dropdownDefaultButton"
+                    >
+                      <li>
                         <Link
-                          to="#"
-                          className="text-gray-700 block px-4 py-2 text-sm"
-                        >
-                          Thay doi mat khau
-                        </Link>
-                      </MenuItem>
-
-                      <MenuItem>
-                        <button
                           onClick={handleLogout}
-                          type="submit"
-                          className="text-gray-700 block px-4 py-2 text-sm"
+                          href="#"
+                          className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
                         >
-                          Dang Xuat
-                        </button>
-                      </MenuItem>
-                    </div>
-                  </MenuItems>
-                </Menu>
-              </div>
+                          Logout
+                        </Link>
+                      </li>
+                      {/* ... các mục dropdown khác ... */}
+                    </ul>
+                  </div>
+                </div>
+              </>
             ) : (
               <div className="flex max-lg:ml-auto space-x-3">
                 <Link
