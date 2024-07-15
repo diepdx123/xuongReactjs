@@ -11,10 +11,13 @@ const AuthContextProvider = ({ children }) => {
   useEffect(() => {
     const checkAuth = async () => {
       const token = localStorage.getItem("token");
+
+      console.log(token, 2222222);
       // const token = Cookies.get("token");
       if (token) {
+        console.log(3333333333);
         try {
-          const { data } = await instance.get("/me", {
+          const { data } = await instance.get("/660/users/1", {
             headers: {
               Authorization: `Bearer ${token}`,
             },
